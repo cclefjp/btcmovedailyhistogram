@@ -38,10 +38,19 @@ rdict = json.loads(response.text)
 
 count = 0
 tmparr = []
+largecount = 0
+
 for elem in rdict['result']:
     close = elem['close']
     open = elem['open']
-    val = close-open
+    high = elem['high']
+    low = elem['low']
+    
+    # val = close-open # 1日の変動量、符号あり
+    # val = abs(close-open) # 1日の変動量、絶対値
+    val = max(abs(low-open), abs(high-open)) # 1日の最大変動量、絶対値
+    if val > 3000:
+        largecount += 1
     tmparr.append(val)
     count += 1
 
@@ -52,6 +61,8 @@ nparr = np.asarray(tmparr, dtype=np.float64)
 # 正規分布に従うかどうかの検定 シャピロ・ウィルク
 sw = stats.shapiro(nparr)
 print('sw=', sw)
+
+print('3000以上動いた日数:', largecount)
 
 plt.hist(nparr, bins=50)
 plt.show()
