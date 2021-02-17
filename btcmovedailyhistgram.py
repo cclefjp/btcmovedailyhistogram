@@ -47,9 +47,11 @@ for elem in rdict['result']:
     low = elem['low']
     
     # val = close-open # 1日の変動量、符号あり
-    # val = abs(close-open) # 1日の変動量、絶対値
-    val = max(abs(low-open), abs(high-open)) # 1日の最大変動量、絶対値
-    if val > 3000:
+    val = abs(close-open) # 1日の変動量、絶対値
+    # val = max(abs(low-open), abs(high-open)) # 1日の最大変動量、絶対値
+    val /= open # 相対値
+    # if val > 3000:
+    if val > 0.10: # 10%以上
         largecount += 1
     tmparr.append(val)
     count += 1
@@ -62,7 +64,8 @@ nparr = np.asarray(tmparr, dtype=np.float64)
 sw = stats.shapiro(nparr)
 print('sw=', sw)
 
-print('3000以上動いた日数:', largecount)
+# print('3000以上動いた日数:', largecount)
+print('10%以上動いた日数:', largecount)
 
 plt.hist(nparr, bins=50)
 plt.show()
