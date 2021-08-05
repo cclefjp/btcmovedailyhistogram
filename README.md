@@ -6,6 +6,15 @@ GitHubのプライベートリポジトリに取得するが、具体的なURL�
 
 ---
 
+## Version 0.2へのロードマップ
+
+* "sid"をconstantsに入れる
+* constants.jsonとconfig.jsonのテンプレートをgithubへ
+* pathocodeが存在しないときの処理を追加
+* 結果のHTMLを出力フォルダに保存
+
+---
+
 ## Version 0.1へのロードマップ
 
 * constants.jsonでURL等の定数を記述
