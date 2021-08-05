@@ -2,5 +2,6 @@
     "constants.json": "getpathoの定数を記述",
     
     "BaseURL": "ここにURLを記載",
-    "BodyQueryKey": "sid"
+    "BodyQueryKey": "sid",
+    "NotFoundSentence": "ここにpathoreportが見つからなかった時の文言を記載"
 }
