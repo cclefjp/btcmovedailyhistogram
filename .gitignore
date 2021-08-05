@@ -1,3 +1,7 @@
+# configとconstantsはひな型のみgithubにアップロードする
+config.json
+constants.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
