@@ -1,0 +1,6 @@
+{
+    "constants.json": "getpathoの定数を記述",
+    
+    "BaseURL": "ここにURLを記載",
+    "BodyQueryKey": "sid"
+}
