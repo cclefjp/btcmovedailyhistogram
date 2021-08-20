@@ -1,10 +1,10 @@
 ''' getpatho.py - UTHのpatho reportを取得するスクリプト '''
 
-import requests
-
 import logging
 import json
-import os.path
+from time import sleep
+from random import randint
+from retrievehtml import RetrieveHTML
 from exception import NetworkError, NotFoundError
 
 __author__ = 'Takeyuki Watadani<watadat-tky@umin.ac.jp'
@@ -23,17 +23,6 @@ constpath = './constants.json'
 with open(constpath, mode='r') as constfp:
     constdict = json.load(constfp)
 
-baseurl = 'BaseURL'
-assert baseurl in constdict
-baseurl = constdict[baseurl]
-
-assert "BodyQueryKey" in constdict
-bodyquerykey = constdict['BodyQueryKey']
-
-logger.info('baseurl = ' + baseurl)
-
-notfoundsentence = constdict['NotFoundSentence']
-
 # config.jsonを読み込む
 configpath = './config.json'
 with open(configpath, mode='r') as configfp:
@@ -43,31 +32,31 @@ codekey = 'pathocode'
 assert codekey in configdict
 pathocode = configdict[codekey]
 
-logger.info('pathocode = ' + pathocode)
+logger.info('pathocode = ' + str(pathocode))
 
-# POSTデータの構築
-body = {
-    bodyquerykey: pathocode
-}
+# 取得関数オブジェクトを生成
+retrievefunc = RetrieveHTML(constdict, configdict, logger)
 
-# requestsによる取得
-response = requests.post(baseurl, data=body)
+# 実際の取得を行う
+if isinstance(pathocode, str):
+    retrievefunc(pathocode)
+elif isinstance(pathocode, list):
+    length = len(pathocode)
+    for i, code in enumerate(pathocode):
+        try:
+            retrievefunc(code)
+        except NetworkError:
+            logger.warning(code + 'の取得中にNetworkErrorが発生しました。')
+        except NotFoundError:
+            logger.warning(code + 'は見つかりませんでした。')
 
-# HTTP return codeの確認
-if not response.status_code == 200:
-    logger.warning("HTTPステータスコードが正常ではありません。status = " + str(response.status_code))
-    logger.warning(response.text)
-    raise NetworkError()
-
-# patho reportが存在するかしないかのチェック
-if notfoundsentence in response.text:
-    raise NotFoundError(pathocode + 'は見つかりませんでした。')
-
-# 結果の出力
-outfile  = os.path.join(configdict['resultpath'], pathocode + '.html')
-with open(outfile, mode='w') as outfp:
-    outfp.write(response.text)
-    logger.info(pathocode + 'のレポート保存が正常に終了しました。')
+        # logger.info('i = ' + str(i) + ', length=' + str(length))
+        if i < length - 1:
+            sleeptime = randint(25, 35)
+            logger.info('サーバー負荷軽減のため' + str(sleeptime) + '秒スリープします。')
+            sleep(sleeptime)
+else:
+    logger.warning('pathocodeがstrでもlistでもないので取得を行いません。')
 
 # 終了
 logger.info('getpathoを終了します。')

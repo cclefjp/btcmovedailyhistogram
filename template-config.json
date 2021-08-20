@@ -1,6 +1,6 @@
 {
     "config.json": "getpathoのコンフィグ事項を記載",
 
-    "pathocode": "ここに取得したいpathocodeを記載",
+    "pathocode": ["ここに取得したいpathocodeをカンマで区切って複数記載", "その2"],
     "resultpath": "ここに結果を保存するディレクトリを記載"
 }
