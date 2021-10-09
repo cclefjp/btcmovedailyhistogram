@@ -32,6 +32,7 @@ response = requests.get(url=URL, params=getparam)
 
 assert response.status_code == 200
 
+print(response.text)
 rdict = json.loads(response.text)
 
 # print(rdict)
